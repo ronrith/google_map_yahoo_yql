@@ -1,0 +1,62 @@
+<!DOCTYPE html> 
+<html lang="en" ng-app="searchApp"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <title>Google Map and Yahoo YQL</title>
+        <link href="css/font-awesome.min.css" rel="stylesheet"> 
+        <link href="css/app.css" rel="stylesheet"> 
+    </head>
+    <body ng-controller="mainCtrl">
+    <div class="nav">
+        <i class="fa fa-search"></i>
+        <div class="find"> 
+            Find: <input type="text" ng-value="cfind" id="query" ng-keypress="keyEnter($event)"><br>
+            <a ng-repeat="item in category" href="#" ng-click="setInput(1,item)">{{item}} </a>
+        </div>
+        <div class="location">
+            Near: <input type="text" ng-value="clocation" value="Boston, MA" id="location" ng-keypress="keyEnter($event)">
+            <a ng-repeat="item in location" href="#" ng-click="setInput(2,item)">{{item}} </a>
+        </div>
+        <a href='#' ng-click="submit($event)" class="btn" ><i class="fa fa-caret-right"></i> Submit</a>
+
+    </div>
+
+    <div class="content">
+        <div class="loading" ng-show="loading">Loading result...</div>
+        <div class="result">
+            <div class="profile" ng-repeat="item in apiResult">
+                <div>
+                    <span class="sright" ng-show="item.Rating.AverageRating != 'NaN'">
+                        Rating: {{item.Rating.AverageRating}}/5<br>
+                        Reviews: {{item.Rating.TotalRatings}}
+                    </span>
+                    {{$index+1}}. <i class="fa fa-cutlery"></i> <b>{{item.Title}}</b><br>
+                    {{item.Address}}<br>
+                    {{item.City}}, {{item.State}}<br> 
+                    {{item.Phone}}<br> 
+
+                    <span ng-repeat="category in item.Categories.Category" class="category" ng-if="category.content != 'Restaurant'">{{category.content | replace:'Restaurant':''}}</span> 
+                </div>
+
+                <div class="review" ng-show="item.Rating.LastReviewIntro != null"><br>"{{item.Rating.LastReviewIntro | strlen:100}}"<br></div>
+                <br>
+                <div>
+                    <a href="{{item.BusinessUrl}}" class="btn" target="_blank"><i class="fa fa-arrow-circle-right"></i> Website</a> <a href='#' class="btn" ng-click="setMap($event,$index)"><i class="fa fa-map-marker"></i> Google Maps</a>
+                </div>
+                <br>
+            </div>
+        </div>
+        <div class="map">
+            <div id="googleMap" class="gMap"></div>
+        </div>
+    </div>
+
+    <script src="http://maps.googleapis.com/maps/api/js?key="></script>
+    <script src="js/jquery.min.js"></script>                
+    <script src="js/angular.min.js"></script>         
+    <script src="js/app.js"></script>         
+    </body>     
+</html>
+
+
+
